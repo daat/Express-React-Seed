@@ -16,7 +16,7 @@ router.route('/')
   var newPost = new Post(req.body);
   newPost.save(function(err, post) {
         if(err) res.send(err);
-        else res.json({message: "Post successfully added!", post });
+        else res.json({message: 'Post successfully added!', post });
     });
 });
 
@@ -31,7 +31,7 @@ router.route('/:id')
   Post.findById({_id: req.params.id}, function(err, post) {
         if(err) res.send(err);
         else {
-          Object.assign(post, req.body).save(function(err, book) {
+          Object.assign(post, req.body).save(function(err, post) {
             if(err) res.send(err);
             else res.json({ message: 'Post updated!', post });
           });
@@ -41,8 +41,8 @@ router.route('/:id')
 .delete(function(req, res, next) {
   Post.remove({_id : req.params.id}, function(err, result) {
     if(err) res.send(err);
-    else res.json({ message: "Post successfully deleted!", result });
+    else res.json({ message: 'Post successfully deleted!', result });
   });
-})
+});
 
 module.exports = router;

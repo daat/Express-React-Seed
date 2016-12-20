@@ -4,12 +4,15 @@
   "private": true,
   "devDependencies": {
     "babel-core": "^6.21.0",
+    "babel-eslint": "^7.1.1",
     "babel-loader": "^6.2.10",
     "babel-preset-env": "^1.1.4",
     "babel-preset-react": "^6.16.0",
     "chai": "^3.5.0",
     "chai-http": "^3.0.0",
     "css-loader": "^0.26.1",
+    "eslint": "^3.12.2",
+    "eslint-plugin-react": "^6.8.0",
     "html-webpack-plugin": "^2.24.1",
     "mocha": "^3.2.0",
     "mockgoose": "^6.0.8",
@@ -36,6 +39,7 @@
     "start": "nodemon server.js",
     "build": "npm run clean && webpack",
     "test": "npm run build && mocha --timeout 10000",
-    "clean": "rm -f ./public/dist/*"
+    "clean": "rm -f ./public/dist/*",
+    "eslint": "eslint .; exit 0;"
   }
 }

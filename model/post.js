@@ -24,7 +24,7 @@ var PostSchema = new Schema(
 
 // Sets the createdAt parameter equal to the current time
 PostSchema.pre('save', function(next) {
-  now = new Date();
+  var now = new Date();
   if(!this.createdAt) {
     this.createdAt = now;
   }

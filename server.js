@@ -9,7 +9,7 @@ var bodyParser = require('body-parser');
 var morgan = require('morgan');
 var config = require('config');
 
-var postRouter = require("./routes/post");
+var postRouter = require('./routes/post');
 
 var app = express();
 
@@ -41,7 +41,7 @@ if(config.util.getEnv('NODE_ENV') !== 'test') {
 var mongodbURI = 'mongodb://' + config.mongodb.DBHost + '/' + config.mongodb.DBName;
 mongoose.Promise = global.Promise;
 mongoose.connect(mongodbURI);
-mongoose.connection.on('error', function(){ console.log('database connection error')});
+mongoose.connection.on('error', function(){ console.log('database connection error');});
 // mongoose.connection.once('open', function() {console.log('database opened')});
 /*When mockgoose is applied*/
 if(mongoose.isMocked) console.log('mongoose is mocked\n\n');
@@ -68,7 +68,7 @@ app.listen(3000, function(err) {
   }
 
   console.log('Listening at http://localhost:3000/');
-})
+});
 
 /*export for testing*/
 module.exports = app;
