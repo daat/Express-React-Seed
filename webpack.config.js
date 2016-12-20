@@ -12,8 +12,8 @@ module.exports = {
   },
   output: {
       filename: '[hash].[name].js',
-      path: path.join(__dirname, 'public'),
-      publicPath: '/'
+      path: path.join(__dirname, 'public/dist'),
+      publicPath: '/dist'
   },
   plugins: [
     new HtmlWebpackPlugin({
