@@ -1,6 +1,7 @@
 var path = require('path');
 var webpack = require('webpack');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
+var autoprefixer = require('autoprefixer');
 
 module.exports = {
   devtool: 'cheap-module-eval-source-map',
@@ -13,7 +14,7 @@ module.exports = {
   output: {
       filename: '[hash].[name].js',
       path: path.join(__dirname, 'public/dist'),
-      publicPath: '/dist'
+      publicPath: '/dist/'
   },
   plugins: [
     new HtmlWebpackPlugin({
@@ -35,7 +36,7 @@ module.exports = {
       {
         test:  /\.css$/,
         exclude: /node_modules/,
-        loader: 'style!css'
+        loader: 'style!css!postcss'
       },
       {
         test:  /\.svg$/,
@@ -43,5 +44,6 @@ module.exports = {
         loader: 'svg-loader?pngScale=2'
       }
     ]
-  }
+  },
+  postcss: [ autoprefixer({ browsers: ['last 2 versions'] }) ]
 };

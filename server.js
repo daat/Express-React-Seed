@@ -56,11 +56,17 @@ app.use(express.static(path.join(__dirname, 'public')));
 /*routing*/
 app.use('/api/posts', postRouter);
 
-app.get('*', function(req, res) {
-  res.sendFile(path.join(__dirname, 'public/dist/index.html'));
-  // res.write(webpackDevMiddleware.fileSystem.readFileSync(path.join(__dirname, 'public/dist/index.html')));
-  // res.end();
-});
+if(config.util.getEnv('NODE_ENV') == 'development') {
+  app.get('*', function(req, res) {
+    res.write(webpackDevMiddleware.fileSystem.readFileSync(path.join(__dirname, 'public/dist/index.html')));
+    res.end();
+  });
+} else {
+  app.get('*', function(req, res) {
+    res.sendFile(path.join(__dirname, 'public/dist/index.html'));
+  });
+}
+
 
 app.listen(3000, function(err) {
   if (err) {
