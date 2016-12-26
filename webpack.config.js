@@ -6,10 +6,14 @@ var autoprefixer = require('autoprefixer');
 module.exports = {
   devtool: 'cheap-module-eval-source-map',
   entry: {
-      main: ['webpack-hot-middleware/client',
+      main: [
+        'webpack-hot-middleware/client',
         './src/index.js'
       ],
-      vendor: ['moment']
+      vendor: [
+        'moment',
+        'whatwg-fetch'
+      ]
   },
   output: {
       filename: '[hash].[name].js',

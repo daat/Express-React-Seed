@@ -1,19 +1,19 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
-var PostSchema = new Schema(
+var UserSchema = new Schema(
   {
-    title: {
+    name: {
       type: String,
       required: true
     },
-    user: {
+    email: {
       type: String,
       required: true
     },
-    content: {
-      type: String,
-      required: true
+    isAdmin: {
+      type: Boolean,
+      default: false
     },
     createdAt: {
       type: Date,
@@ -27,7 +27,7 @@ var PostSchema = new Schema(
 );
 
 // Sets the createdAt parameter equal to the current time
-PostSchema.pre('save', function(next) {
+UserSchema.pre('save', function(next) {
   var now = new Date();
   if(!this.createdAt) {
     this.createdAt = now;
@@ -36,5 +36,4 @@ PostSchema.pre('save', function(next) {
   next();
 });
 
-//Exports the BookSchema for use elsewhere.
-module.exports = mongoose.model('post', PostSchema);
+module.exports = mongoose.model('user', UserSchema);

@@ -36,4 +36,43 @@ describe('Posts', function() {
       });
   });
 
+  describe('/POST Post', function() {
+      it('it should not POST a post without content field', function(done) {
+        let post = {
+            title: "The Lord of the Rings",
+            user: "J.R.R. Tolkien"
+        }
+        chai.request(server)
+            .post('/api/posts')
+            .send(post)
+            .end(function(err, res) {
+                res.should.have.status(200);
+                res.body.should.be.a('object');
+                res.body.should.have.property('errors');
+                res.body.errors.should.have.property('content');
+                res.body.errors.content.should.have.property('kind').eql('required');
+                done();
+            });
+      });
+
+      it('it should POST a post', function(done) {
+        let post = {
+            title: "The Lord of the Rings",
+            user: "J.R.R. Tolkien",
+            content: "HaHaHa"
+        }
+        chai.request(server)
+            .post('/api/posts')
+            .send(post)
+            .end(function(err, res) {
+                res.should.have.status(200);
+                res.body.should.be.a('object');
+                res.body.should.have.property('message');
+                res.body.message.should.eql('Post successfully added!');
+                res.body.should.have.property('post');
+                res.body.post.should.have.property('content').eql('HaHaHa');
+                done();
+            });
+      });
+  });
 });

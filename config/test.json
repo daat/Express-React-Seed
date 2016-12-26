@@ -2,5 +2,6 @@
   "mongodb": {
     "DBHost": "127.0.0.1",
     "DBName": "seed-test"
-  }
+  },
+  "session_secret": "XcaeSfeIfekS91nFfhofa4198h3hlw93nf5al4qtp2"
 }

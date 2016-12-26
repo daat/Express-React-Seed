@@ -7,9 +7,11 @@ var webpackHot = require('webpack-hot-middleware');
 var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
 var morgan = require('morgan');
+var session = require('express-session');
 var config = require('config');
 
 var postRouter = require('./routes/post');
+var userRouter = require('./routes/user');
 
 var app = express();
 
@@ -46,6 +48,8 @@ mongoose.connection.on('error', function(){ console.log('database connection err
 /*When mockgoose is applied*/
 if(mongoose.isMocked) console.log('mongoose is mocked\n\n');
 
+/*in-memory session*/
+app.use(session(config.session));
 
 /*parse JSON request*/
 app.use(bodyParser.json());
@@ -55,6 +59,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 /*routing*/
 app.use('/api/posts', postRouter);
+app.use('/api/users', userRouter);
 
 if(config.util.getEnv('NODE_ENV') == 'development') {
   app.get('*', function(req, res) {
