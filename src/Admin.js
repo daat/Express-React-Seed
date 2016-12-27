@@ -4,7 +4,7 @@ class Admin extends Component {
   render() {
     return (
       <div className="Admin">
-        
+        I am admin!!!
       </div>
     );
   }

@@ -3,37 +3,43 @@ import { render } from 'react-dom';
 import { withRouter } from 'react-router';
 import 'whatwg-fetch';
 
-var auth = {
-  login(email, password, callback) {
+export var auth = {
+  login(email, password, obj, callback) {
     if(localStorage.user) {
-      if(callback) callback();
-      this.onChange();
+      if(callback) callback(obj);
+      this.onChange(this.bindObj);
       return;
     }
 
-  fetch('/api/users/login')
-    .then(function(res) {
-      return res.json();
+    let _this = this;
+
+    fetch('/api/users/login', {
+      method: 'POST',
+      body: JSON.stringify({email: email, password: password})
     })
-    .then(function(json) {
-      if(json.err || !json.user) {
-        console.log(json.err || 'user undefined');
-      } else {
-        localStorage.user = json.user;
-      }
-      if(callback) callback();
-      this.onChange();
-    });
+      .then(function(res) {
+        return res.json();
+      })
+      .then(function(json) {
+        if(json.err || !json.user) {
+          console.log(json.err || 'user undefined');
+        } else {
+          localStorage.user = JSON.stringify(json.user);
+        }
+        if(callback) callback(obj);
+        _this.onChange(_this.bindObj);
+      });
+
   },
 
   logout(callback) {
     delete localStorage.user;
     if(callback) callback();
-    this.onChange();
+    this.onChange(this.bindObj);
   },
 
   getUser() {
-    return localStorage.user;
+    return this.isLoggedIn()? JSON.parse(localStorage.user): null;
   },
 
   isLoggedIn() {
@@ -41,12 +47,19 @@ var auth = {
   },
 
   isAdmin() {
-    if(localStorage.user && localStorage.user.isAdmin)
+    if(this.isLoggedIn() && this.getUser().isAdmin)
       return true;
     return false;
   },
 
-  onChange() {
+  bindObj: null,
+
+  bindOnChange(obj, func) {
+    this.bindObj = obj;
+    this.onChange = func;
+  },
+
+  onChange(obj) {
 
   },
 
@@ -63,20 +76,19 @@ export const Login = withRouter(
 
     submit(event) {
       event.preventDefault();
-
       const email = this.refs.email.value;
       const pass = this.refs.pass.value;
 
-      auth.login(email, pass, function() {
-        if (auth.isLoggedIn())
-          return this.setState({ error: true });
+      auth.login(email, pass, this, function(_this) { // _this == this
+        if(!auth.isLoggedIn())
+          return _this.setState({ error: true });
 
-        const location = this.props.location;
+        const location = _this.props.location;
 
         if (location.state && location.state.nextPathname) {
-          this.props.router.replace(location.state.nextPathname);
+          _this.props.router.replace(location.state.nextPathname);
         } else {
-          this.props.router.replace('/');
+          _this.props.router.replace('/');
         }
       });
     },
@@ -95,19 +107,5 @@ export const Login = withRouter(
     }
   })
 );
-//
-// export const Logout = withRouter(
-//   React.createClass({
-//     componentDidMount() {
-//       auth.logout(function() {
-//         this.props.router.replace('/');
-//       });
-//     },
-//
-//     render() {
-//       return <p>You are now logged out</p>;
-//     }
-//   })
-// );
 
-module.exports = auth;
+export default auth;
