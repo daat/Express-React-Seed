@@ -22,7 +22,7 @@ router.route('/')
 });
 
 router.route('/')
-.post(checkAdmin)
+// .post(checkAdmin)
 .post(function(req, res, next) {
   var newPost = new Post(req.body);
   newPost.save(function(err, post) {
@@ -40,12 +40,16 @@ router.route('/:id')
 });
 
 router.route('/:id')
-.put(checkAdmin)
+// .put(checkAdmin)
 .put(function(req, res, next) {
   Post.findById({_id: req.params.id}, function(err, post) {
         if(err) res.send(err);
         else {
-          Object.assign(post, req.body).save(function(err, post) {
+          Object.assign(post, req.body);
+          if(!req.body.password) {
+            post['notEditPassword'] = true;
+          }
+          post.save(function(err, post) {
             if(err) res.send(err);
             else res.json({ message: 'Post updated!', post });
           });
@@ -54,7 +58,7 @@ router.route('/:id')
 });
 
 router.route('/:id')
-.delete(checkAdmin)
+// .delete(checkAdmin)
 .delete(function(req, res, next) {
   Post.remove({_id : req.params.id}, function(err, result) {
     if(err) res.send(err);

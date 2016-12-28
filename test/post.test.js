@@ -6,12 +6,15 @@ var should = chai.should();
 chai.use(chaiHttp);
 
 var server;
-
+var agent; // for retaining cookies
 var Post = require('../model/post');
 
 describe('Posts', function() {
     before(function(done) { // Wait for test_helper
-      if(!server) server = require('../server');
+      if(!server) {
+        server = require('../server');
+        agent = chai.request.agent(server);
+      }
       done();
     });
 
@@ -25,7 +28,7 @@ describe('Posts', function() {
   */
   describe('/GET Post', function() {
       it('it should GET all the posts', function(done) {
-        chai.request(server)
+        agent
             .get('/api/posts')
             .end(function(err, res) {
                 res.should.have.status(200);
@@ -42,7 +45,7 @@ describe('Posts', function() {
             title: "The Lord of the Rings",
             user: "J.R.R. Tolkien"
         }
-        chai.request(server)
+        agent
             .post('/api/posts')
             .send(post)
             .end(function(err, res) {
@@ -61,7 +64,7 @@ describe('Posts', function() {
             user: "J.R.R. Tolkien",
             content: "HaHaHa"
         }
-        chai.request(server)
+        agent
             .post('/api/posts')
             .send(post)
             .end(function(err, res) {

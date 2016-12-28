@@ -12,7 +12,8 @@ module.exports = {
       ],
       vendor: [
         'moment',
-        'whatwg-fetch'
+        'whatwg-fetch',
+        'underscore'
       ]
   },
   output: {

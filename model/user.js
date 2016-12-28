@@ -1,5 +1,8 @@
 var mongoose = require('mongoose');
+var bcrypt = require('bcrypt');
 var Schema = mongoose.Schema;
+
+const saltRounds = 10;
 
 var UserSchema = new Schema(
   {
@@ -8,6 +11,10 @@ var UserSchema = new Schema(
       required: true
     },
     email: {
+      type: String,
+      required: true
+    },
+    password: {
       type: String,
       required: true
     },
@@ -33,7 +40,30 @@ UserSchema.pre('save', function(next) {
     this.createdAt = now;
   }
   this.updatedAt = now;
-  next();
+  let user = this;
+  if(!this.notEditPassword) {
+    bcrypt.hash(this.password, saltRounds, function(err, hash) {
+      if(err) {
+        console.log(err);
+      } else {
+        user.password = hash;
+        next();
+      }
+    });
+  } else {
+    delete this.notEditPassword;
+    next();
+  }
 });
+
+UserSchema.methods.comparePassword = function(pw, callback) {
+  bcrypt.compare(pw, this.password, function(err, same) {
+    if(err) {
+      callback(err, false);
+      return;
+    }
+    callback(null, same);
+  });
+};
 
 module.exports = mongoose.model('user', UserSchema);
